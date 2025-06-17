@@ -1,34 +1,66 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
 
-function App() {
-  const [count, setCount] = useState(0)
+const Buttons = (props) => <button onClick={props.handleclick}>{props.text}</button>
 
+
+const StatisticLine = (props) => { 
   return (
-    <>
+   <tr>
+    <td>{props.text}</td>
+    <td>{props.value}</td>
+    </tr>
+  )
+
+}
+const Statistics = (props)=> { 
+  const total = props.good+props.bad+props.neutral
+  const average = (props.good*1+props.bad*-1+props.neutral*0)/total
+  const positive = (props.good/total)*100+"%"
+  if (total===0) { 
+    return (
       <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <b>Statistics</b>
+        <p>No feedback given</p>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
+    )
+  }
+  return (
+    <div>
+      <b>Statistics</b>
+      <table>
+        <tbody>
+      <StatisticLine text="good" value={props.good} />
+      <StatisticLine text="neutral" value={props.neutral}/>
+      <StatisticLine text="bad" value={props.bad} />
+      <StatisticLine text="all" value={total} />
+      <StatisticLine text="average" value={average}/>
+      <StatisticLine text="positive" value={positive}/>
+       </tbody>
+      </table>
+    </div>
+  )
+}
+const App = ()=> { 
+  const [good,setgood] = useState(0)
+  const [bad,setbad] = useState(0)
+  const [neutral,setneutral] = useState(0)
+
+  const buttonvalue = (rating,ratingfunction) => ()=> { 
+    ratingfunction(rating+1)
+    // console.log(rating)
+  }
+  return ( 
+    <div>
+      <div>
+      <b>Give Feedback</b>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+      <div> 
+        <Buttons handleclick={buttonvalue(good,setgood)} text="good"/>
+        <Buttons handleclick={buttonvalue(neutral,setneutral)} text="neutral"/>
+        <Buttons handleclick={buttonvalue(bad,setbad)} text="bad"/>
+        <Statistics good={good} bad={bad} neutral={neutral} />
+      </div>
+    </div>
   )
 }
 
