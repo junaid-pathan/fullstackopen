@@ -1,35 +1,59 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useEffect } from 'react'
+import Note from './components/Notes'
+import axios from 'axios'
 
-function App() {
-  const [count, setCount] = useState(0)
+//props.notes is a list that has objects in it
+const App = () => {
+  const [notes, setNotes] = useState([]) // the whole list
+  const [newNote,setNewNote] = useState( "a new note..") // newnote is just what the user typed
+  const [showAll,setShowAll] = useState(true)
+  // console.log(notes)
+  useEffect(()=>{ 
+    console.log('effect')
+    axios
+      .get('http://localhost:3001/notes')
+      .then(response=> { 
+        console.log("promise fulfilled")
+        setNotes(response.data)
+      })
+  },[])
+  console.log("render",notes.length,"notes")
+  const addNote =(event)=> { 
+    event.preventDefault()
+    console.log("button clicked", event.target)
+    const noteobject = { 
+      content : newNote,
+      important : Math.random()<0.5,
+      id:String(notes.length+1)
+    }
+    setNotes(notes.concat(noteobject))
+    setNewNote('')
+  }
+
+  const handlechange = (event) => { 
+    // console.log(event.target.value)
+    setNewNote(event.target.value)
+  }
+// notestoshow depends on showAll's state is if its true or false 
+const notestoshow = showAll?notes : notes.filter(note => note.important)
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div>
+      <h1>Notes</h1>  
+      <div> 
+        <button onClick={()=> setShowAll(!showAll)}>show {showAll? 'important':'all'}</button>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+      <ul> 
+        {notestoshow.map(note => 
+          <Note key={note.id} note={note} />
+        )}
+      </ul>
+      <form onSubmit={addNote}> 
+        <input value={newNote} onChange={handlechange} /> 
+        <button type="submit">save</button>
+      </form>
+    </div>
   )
 }
 
-export default App
+export default App 

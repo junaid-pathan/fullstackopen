@@ -1,15 +1,22 @@
-import { useState } from 'react'
+import { useState,useEffect } from 'react'
 import Numbers from './components/display'
+import axios from 'axios'
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas',
-      number: '123456789'
-     }
-  ]) 
+  const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
   const [newNumber,setNewNumber] =useState('')
   const [filter,setFilter] = useState('')
   const namelist = persons.map(person=> person.name.toLowerCase())
+  const hook = ()=> { 
+    console.log("hook just ran")
+    axios 
+      .get("http://localhost:3001/persons")
+      .then(response=> { 
+        setPersons(response.data)
+      })
+  }
+  useEffect(hook,[])
+  
   const handlechange = (change,event) => { 
     if (change=='name'){ 
       setNewName(event.target.value)
