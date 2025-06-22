@@ -29,21 +29,48 @@ const App = () => {
   const addDetails = (event)=> { 
     event.preventDefault()
     if (namelist.includes(newName.toLowerCase())) { 
-      alert(`${newName} has already been added to the phonebook`)
-    }else{ 
+      if (window.confirm(`${newName} is already added. Do you want to replace the number?`)){ 
+        const olddata = persons.find(obj => obj.name === newName )
+        const newdata = {name:newName,number:newNumber}
+        console.log(olddata)
+        axios 
+          .put(`http://localhost:3001/persons/${olddata.id}`,newdata)
+          .then(response=> setPersons(persons.map( person => 
+            person.id === olddata.id? response.data : person)))
+      console.log("ok")
+      }}
+    else{ 
       const newobject = { name:newName, number:newNumber}
-      setPersons(persons.concat(newobject))
-      setNewName('')
-      setNewNumber('')
+      axios
+        .post("http://localhost:3001/persons",newobject)
+        .then(response=> { 
+          setPersons(persons.concat(response.data))
+        })
+      
     }
+    setNewName('')
+    setNewNumber('')
   }
+
+  const deleteItem = (person) => { 
+    if(window.confirm(`Delete ${person.name} ? `)){ 
+    axios 
+      .delete(`http://localhost:3001/persons/${person.id}`)
+      .then(response=> { 
+        
+        setPersons(persons.filter(people => people.id !==person.id))})
+      .catch(error => { 
+        console.log("L")
+      })
+
+  }}
 
   const filtername = (event) => { 
     const searched = event.target.value
     setFilter(searched)
   }
 
-  const personsToShow = persons.filter(person =>
+  const filteredpersons = persons.filter(person =>
     person.name.toLowerCase().includes(filter.toLowerCase())
   )
 
@@ -66,7 +93,7 @@ const App = () => {
         </div>
       </form>
       <h2>Numbers</h2>
-      <Numbers persons={filter===''?persons:personsToShow} /> 
+      <Numbers persons={filter===''?persons:filteredpersons} deleteItem={deleteItem} /> 
     </div>
   )
 }
