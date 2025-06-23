@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { useEffect,useState} from 'react'
 import Filter from './components/filter'
-import Display from './display'
+import Display from './components/display'
 const App =() => { 
   const [change,setChange]=useState("")
   const [countries,setCountries]=useState([])
@@ -30,7 +30,7 @@ const App =() => {
   return (
   <div> 
     <Filter change={change} filtervalues={filterchange} />
-    <div> 
+    <div className='list'> 
       <Display filteredcountry={filteredcountry} />
     </div>
   </div>

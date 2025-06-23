@@ -1,0 +1,41 @@
+.filter h1 {
+  color: white;
+  font-size: 7vw;
+}
+body{ 
+    background-image: url(./istockphoto-1405728317-612x612.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;       /* or contain */
+    background-position: center top;
+  background-attachment: scroll;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+}
+p{ 
+    font-size: 4vh;
+}
+input{ 
+    font-size: 5vh;
+    text-align: center;
+}
+
+li{ 
+    font-size: 3vh;
+    text-align: center;
+    list-style-position: inside;
+}
+
+.country{ 
+    color: white;
+    font-size: 5vh;
+    font-weight: bold;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+.list{ 
+    margin-top: 3vh ;
+    /* background-color: white ; */
+}
