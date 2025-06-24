@@ -1,6 +1,12 @@
 const express = require('express')
+const morgan = require('morgan')
 const app = express()
+
+morgan.token('body',(req)=>{ 
+    return req.method==="POST"? JSON.stringify(req.body):""
+})
 app.use(express.json())
+app.use(morgan(':method :url :status :response-time ms :body'))
 const data = [
     { 
       "id": "1",
@@ -23,6 +29,16 @@ const data = [
       "number": "39-23-6423122"
     }
 ]
+
+const requestLogger = (request, response, next) => {
+  console.log('Method:', request.method)
+  console.log('Path:  ', request.path)
+  console.log('Body:  ', request.body)
+  console.log('---')
+  next()
+}
+
+app.use(requestLogger)
 app.get("/api/persons",(req,res) => { 
     // res.status(202)
     res.json(data)
@@ -56,7 +72,6 @@ const generateId = () => {
     const newid = Math.floor(Math.random()*1000000000)
     return String(newid)
 }
-
 app.post('/api/persons',(req,res)=> { 
     const newdata  = req.body
     const names = data.map(name => name.name)
@@ -78,7 +93,11 @@ app.post('/api/persons',(req,res)=> {
         return res.status(201).send("Successfully Added")
     }
 })
-
+const invalidurl = (req,res)=> { 
+    console.log("Invalid URL")
+    res.status(202).json({error:'unknown point'})
+}
+app.use(invalidurl)
 const port = 3001 
 app.listen(port,()=> { 
     console.log(`listening on port ${port}`)
