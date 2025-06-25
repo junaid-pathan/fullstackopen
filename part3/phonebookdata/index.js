@@ -10,7 +10,7 @@ morgan.token('body',(req)=>{
 })
 app.use(express.json())
 app.use(morgan(':method :url :status :response-time ms :body'))
-const data = [
+let data = [
     { 
       "id": "1",
       "name": "Arto Hellas", 
@@ -96,6 +96,26 @@ app.post('/api/persons',(req,res)=> {
         return res.status(201).json(finaldata)
     }
 })
+
+app.delete('/api/persons/:id',(req,res)=> { 
+    const id = req.params.id
+    data = data.filter(contact => contact.id!==id)
+    res.status(201).send("Deleted")
+})
+
+app.put('/api/persons/:id',(req,res)=> { 
+    const id = req.params.id
+    data.find(contact => contact.id === id)   
+    const updatedcontact = { 
+        id: id,
+        name:req.body.name,
+        number:req.body.number
+
+    }
+    data = data.map(contact => contact.id === id?updatedcontact : contact ) 
+    res.status(201).json(updatedcontact)
+})
+
 const invalidurl = (req,res)=> { 
     console.log("Invalid URL")
     res.status(202).json({error:'unknown point'})
