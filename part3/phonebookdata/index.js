@@ -1,7 +1,9 @@
 const express = require('express')
 const morgan = require('morgan')
 const app = express()
+const cors = require('cors')
 
+app.use(cors())
 morgan.token('body',(req)=>{ 
     return req.method==="POST"? JSON.stringify(req.body):""
 })
@@ -98,7 +100,7 @@ const invalidurl = (req,res)=> {
     res.status(202).json({error:'unknown point'})
 }
 app.use(invalidurl)
-const port = 3001 
+const port = process.env.port || 3001
 app.listen(port,()=> { 
     console.log(`listening on port ${port}`)
 
