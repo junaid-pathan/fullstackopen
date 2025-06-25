@@ -30,11 +30,11 @@ const App = () => {
     event.preventDefault()
     if (namelist.includes(newName.toLowerCase())) { 
       if (window.confirm(`${newName} is already added. Do you want to replace the number?`)){ 
-        const olddata = persons.find(obj => obj.name === newName )
+        const olddata = persons.find(obj => obj.name.toLowerCase() === newName.toLowerCase() )
         const newdata = {name:newName,number:newNumber}
         console.log(olddata)
         axios 
-          .put(`/api/persons${olddata.id}`,newdata)
+          .put(`/api/persons/${olddata.id}`,newdata)
           .then(response=> setPersons(persons.map( person => 
             person.id === olddata.id? response.data : person)))
       console.log("ok")

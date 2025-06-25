@@ -93,7 +93,7 @@ app.post('/api/persons',(req,res)=> {
             "number":newdata.number
         }
         data.push(finaldata)
-        return res.status(201).send("Successfully Added")
+        return res.status(201).json(finaldata)
     }
 })
 const invalidurl = (req,res)=> { 
