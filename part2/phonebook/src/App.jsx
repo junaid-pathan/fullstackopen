@@ -10,7 +10,7 @@ const App = () => {
   const hook = ()=> { 
     console.log("hook just ran")
     axios 
-      .get("http://localhost:3001/persons")
+      .get("http://localhost:3001/api/persons")
       .then(response=> { 
         setPersons(response.data)
       })
@@ -34,7 +34,7 @@ const App = () => {
         const newdata = {name:newName,number:newNumber}
         console.log(olddata)
         axios 
-          .put(`http://localhost:3001/persons/${olddata.id}`,newdata)
+          .put(`http://localhost:3001/api/persons/${olddata.id}`,newdata)
           .then(response=> setPersons(persons.map( person => 
             person.id === olddata.id? response.data : person)))
       console.log("ok")
@@ -42,7 +42,7 @@ const App = () => {
     else{ 
       const newobject = { name:newName, number:newNumber}
       axios
-        .post("http://localhost:3001/persons",newobject)
+        .post("http://localhost:3001/api/persons",newobject)
         .then(response=> { 
           setPersons(persons.concat(response.data))
         })
