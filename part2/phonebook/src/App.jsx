@@ -10,7 +10,7 @@ const App = () => {
   const hook = ()=> { 
     console.log("hook just ran")
     axios 
-      .get("http://localhost:3001/api/persons")
+      .get("/api/persons")
       .then(response=> { 
         setPersons(response.data)
       })
@@ -34,7 +34,7 @@ const App = () => {
         const newdata = {name:newName,number:newNumber}
         console.log(olddata)
         axios 
-          .put(`http://localhost:3001/api/persons/${olddata.id}`,newdata)
+          .put(`/api/persons${olddata.id}`,newdata)
           .then(response=> setPersons(persons.map( person => 
             person.id === olddata.id? response.data : person)))
       console.log("ok")
@@ -42,7 +42,7 @@ const App = () => {
     else{ 
       const newobject = { name:newName, number:newNumber}
       axios
-        .post("http://localhost:3001/api/persons",newobject)
+        .post("/api/persons",newobject)
         .then(response=> { 
           setPersons(persons.concat(response.data))
         })
@@ -55,7 +55,7 @@ const App = () => {
   const deleteItem = (person) => { 
     if(window.confirm(`Delete ${person.name} ? `)){ 
     axios 
-      .delete(`http://localhost:3001/persons/${person.id}`)
+      .delete(`/api/persons/${person.id}`)
       .then(response=> { 
         
         setPersons(persons.filter(people => people.id !==person.id))})
