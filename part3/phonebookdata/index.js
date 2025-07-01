@@ -2,7 +2,7 @@ const express = require('express')
 const morgan = require('morgan')
 const app = express()
 const cors = require('cors')
-
+const mongoose = require('mongoose')
 app.use(express.static('dist'))
 app.use(cors())
 morgan.token('body',(req)=>{ 
@@ -10,6 +10,16 @@ morgan.token('body',(req)=>{
 })
 app.use(express.json())
 app.use(morgan(':method :url :status :response-time ms :body'))
+const password = process.argv[2]
+const URL = `mongodb+srv://jpathan:${password}@cluster0.jeplmrq.mongodb.net/phonebook?retryWrites=true&w=majority&appName=Cluster0`
+mongoose.connect(URL)
+
+const newschema = new mongoose.Schema({ 
+    name:string,
+    number:string
+})
+
+const Persons = mongoose.model('person',newschema)
 let data = [
     { 
       "id": "1",
